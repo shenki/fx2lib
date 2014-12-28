@@ -22,9 +22,11 @@
 #include <eputils.h>
 
 #include <fx2regs.h>
+#define DEBUG_EPUTILS
 
 #ifdef DEBUG_EPUTILS
 #include <stdio.h>
+#include "serial.h"
 #else
 #define printf(...)
 #endif
@@ -32,6 +34,8 @@
 void readep0( BYTE* dst, WORD len) {
     WORD read = 0; // n bytes read
     BYTE c,avail;
+    putchar('&');
+    putchar('\n');
     while (read < len) {
         EP0BCH = 0;
         // NOTE need syncdelay?
@@ -48,6 +52,8 @@ void readep0( BYTE* dst, WORD len) {
 void writeep0( BYTE* src, WORD len) {
     WORD written = 0;
     BYTE c;
+    putchar('&');
+    putchar('\n');
     while ( written < len ) {
         while ( EP0CS & bmEPBUSY ); // wait
         for (c=0;c<64 && written<len;++c ) {

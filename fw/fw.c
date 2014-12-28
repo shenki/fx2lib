@@ -22,14 +22,8 @@
 #include <delay.h>
 #include <setupdat.h>
 
-#ifdef DEBUG_FIRMWARE 
 #include <serial.h>
 #include <stdio.h>
-#else
-#define printf(...)
-#endif
-
-
 
 
 volatile __bit dosud=FALSE;
@@ -51,23 +45,37 @@ void main() {
  main_init();
 
  // set up interrupts.
+ printf("USE_USB_INT\r\n");
  USE_USB_INTS();
- 
+
+ printf("SUDAV\r\n");
  ENABLE_SUDAV();
+ printf("USBRESET\r\n");
  ENABLE_USBRESET();
+ printf("HISPEED\r\n");
  ENABLE_HISPEED(); 
+ printf("SUSPEND\r\n");
  ENABLE_SUSPEND();
+ printf("RESUME\r\n");
  ENABLE_RESUME();
 
+ printf("EA=1\r\n");
  EA=1;
+ printf("EA=0\r\n");
+ while(TRUE) {
+ };
 
 // iic files (c2 load) don't need to renumerate/delay
 // trm 3.6
 #ifndef NORENUM
+ printf("RENUMERATE\r\n");
  RENUMERATE();
 #else
+ printf("USBCS\r\n");
  USBCS &= ~bmDISCON;
 #endif
+
+ printf("entering while true\r\n");
  
  while(TRUE) {
 
@@ -75,7 +83,9 @@ void main() {
 
      if (dosud) {
        dosud=FALSE;
+       printf("setupdata\r\n");
        handle_setupdata();
+       printf("setupdata done\r\n");
      }
 
 #ifdef SUSPEND_ENABLED

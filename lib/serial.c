@@ -21,6 +21,10 @@
 #include <fx2macros.h>
 #include <serial.h>
 
+extern char getchar(void);
+extern void putchar (char c);
+
+#if 0
 
 /**
  * using the comp port implies that timer 2 will be used as
@@ -68,7 +72,6 @@ void sio0_init( WORD baud_rate ) __critical { // baud_rate max should be 57600 s
     TI = 1; // we send initial byte
 
 }
-
 char getchar() {
   char c;
   while (!RI)
@@ -89,4 +92,6 @@ void putchar (char c) {
   _transchar(c);  
   if (c == '\r' ) _transchar('\n'); // transmit \r\n
 }
+
+#endif
 
